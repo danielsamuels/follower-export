@@ -1,0 +1,70 @@
+<textarea id="main" style="width:100%; height: 100%"></textarea>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+var rows = [];
+var abilities = ['Wild Aggression', 'Massive Strike', 'Group Damage', 'Magic Debuff', 'Danger Zones', 'Minion Swarms', 'Powerful Spell', 'Deadly Minions', 'Timed Battle', 'Epic Mount', 'Scavenger']
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+$(function() {
+    $.get('https://gist.githubusercontent.com/danielsamuels/353318771bdfc202f332/raw', function(data) {
+        // Parse the data out.
+        followers = data.split('\\n');
+
+        for (var x=0; x<followers.length; x++) {
+            var follower = followers[x].split(',')
+
+            var followerData = [
+                follower[0],  // Name
+                follower[1], // Quality
+                follower[2], // Level
+                follower[3], // iLevel
+            ];
+
+            for (var y=0; y<abilities.length; y++) {
+                // Does this follower have this ability?
+                var hasAbility = false;
+
+                for (i=4; i<follower.length; i++) {
+                    if (follower[i] === abilities[y]) {
+                        hasAbility = true;
+                    }
+                }
+
+                followerData.push(hasAbility ? 'Y': 'N')
+
+            }
+
+            rows.push(followerData);
+        }
+
+        sortByKey(rows, 3);
+        rows.reverse();
+
+        followerData_tabs = []
+
+        for (var i=0; i<rows.length; i++) {
+            console.log(rows[i])
+            followerData_tabs.push(rows[i].join("\t"));
+        }
+
+        rows = followerData_tabs.join("\r\n")
+
+        $('#main').val(rows);
+
+        // var encodedUri = 'data:application/csv;charset=utf-8,' + encodeURI(rows);
+        // var link = document.createElement("a");
+        // link.setAttribute("href", encodedUri);
+        // link.setAttribute("download", "data.csv");
+        // link.click();
+    });
+});
+
+
+</script>

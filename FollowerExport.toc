@@ -1,0 +1,6 @@
+## Interface: 60000
+## Title: Follower Export
+## Author: Daniel Samuels (Posix @ Lightbringer EU)
+## Version: 0.1
+
+main.lua
